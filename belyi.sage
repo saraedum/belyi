@@ -35,43 +35,43 @@ def eindToFront(S):
 
 def Belyi_AGS(SW,SB,SI,info=False):
     r"""
-    Diese Funktion berechnet ein Gleichungssystem um ,aus einer Signatur einer Kinderzeichnung, eine Belyi-Funktion zu bestimmen. 
+    This function returns a system of equations, constructed with the signature of a dessin denfant, to calculate Belyi-functions. 
 
     AUTHORS:
 
-    -Michael Eskin
+    - Michael Eskin
 
-    -Matthias Heinlein
+    - Matthias Heinlein
 
-    -Christian Steck
+    - Christian Steck
 
     INPUT:
 
-    -``SW`` eine Liste mit vorgegebenen Vielfachheiten bzw. Verzweigungsindizes weißer Punkte, die auf 0 geschickt werden sollen
+    - ``SW`` a list with given ramificationindices of white points, which will be mapped to 0
 
-    -``SB`` eine Liste mit vorgegeben Vielfachheiten bzw. Verzweigungsindizes schwarzer Punkte, die auf 1 geschickt werden sollen 
+    - ``SB`` a list with given ramificationindices of black points, which will be mapped to 1
 
-    -``SI`` eine Liste mit vorgegeben Vielfachheiten bzw. Verzweigungsindizes von Punkten, die auf infty geschickt werden sollen
+    - ``SI`` a list with given ramificationindices of points, which will be mapped to infty
 
-    -Optional: Bool "info"(=False by default). Wenn info=True, so werden alle Informationen zur Normalisierung herausgegeben.
+    - Optional: Bool "info"(=False by default). If info=True, all additional informations regarding normalization are        printed.
 
     OUTPUT:
 
-    -Ein Tupel ``[a,f]`` bestehend aus einem Gleichungssystem 'a' für die Koeffizienten der symbolischen Belyi-Funktion ``f``.
+    - A tuple ``[a,f]``, where ``a`` is a system of equations for the coefficients of the formal Belyi-function ``f``.
 
     NOTES: 
 
-    -Die Listen SW,SB,SI werden derart sortiert, dass die Punkte mit dem 'eindeutigsten, größten' Verzweigungsindex auf die entsprechenden Verzweigungspunkte im Bildraum abgebildet werden. Ist kein eindeutiger Wert vorhanden, wird der Wert mit der geringsten Häufigkeit, der am größten ist, auf den entsprechenden Punkt geschickt.
+    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here the point x=0 is a white point with the 'most  unique', largest ramificationindex, and similar for x=1 and x=infty. If there is no unique value, then the highest value with the lowest crebritude will be mapped to the corresponding point.
 
-    -Um die Belyi-Funktion ``f`` zu berechnen muss das Gleichungssystem gelöst werden und die Koeffizienten von ``f`` auf die Lösungen abgebildet werden. (vergleiche die Funktion belyi-groebner). 
+    - To calculate ``f`` one has to solve the system of equations ``a`` and map these solutions to the coefficients of ``f``. (compare the function belyi-groebner). 
 
-  .. WARNING::
+    .. WARNING::
 
-    Die Listen SW,SB und SI sollten mit Vorsicht eingegeben werden. Zum Beispiel ist es oftmals sinnvoll die Liste mit der kleinsten Länge oder dem größten Eintrag als SI zu nehmen, da der Nennergrad dann minimal wird. Jedoch hat es sich in der Praxis gezeigt, dass eine allgemeine Änderung gelegentlich zu einem größeren Gleichungssystem führt. Es ist also möglich unter Umständen mit einer Vertauschung der Listen untereinander (in welcher Reihenfolge die Elemente in der Liste vorkommen ist egal) eine Einsparung an Rechenleistung zu gewinnen.
+        The lists SW,SB and SI should be entered with care. It is often advisable to use the list with the least elements or with the highest value as SI, since the degree of the denominator will be minimal. But in general, an automated change has proven to lead to bigger systems of equations. I.e. is it possible, that interchanging the lists can lead to a reduced need of computational power. The order of the elements in each list, however, does not matter.
 
     EXAMPLES:
      
-    In diesem Beispiel betrachten wir eine Kinderzeichnung mit der Signatur SW=[2,2],SB=[3,1],SI=[3,1]::
+    In this example we construct a Belyi-function with signature SW=[2,2],SB=[3,1],SI=[3,1]::
 
         sage: [a,f]=Belyi_AGS([2,2],[3,1],[3,1])
         sage: a
@@ -87,11 +87,19 @@ def Belyi_AGS(SW,SB,SI,info=False):
         [a0 + 2.549038105676658?, a1 + 1.267949192431123?]
         [a0 + 2.549038105676658?]
         []
+
+    This is the formal Belyi-function ``f``::
+
+        sage: f
+        (a0*x^4 + 2*a0*a1*x^3 + a0*a1^2*x^2)/(x + a2)
+
+    We now map the coefficients of ``f`` to the solutions::
+
         sage: f=f.numerator().map_coefficients(b[0])/f.denominator().map_coefficients(b[0])
         sage: f
         (0.04903810567665797?*x^4 - 0.4641016151377546?*x^3 + 1.098076211353316?*x^2)/(x - 0.3169872981077807?)
     
-    Test ob die Verzweigungen richtig sind::
+    We test for the correctness of the ramification::
 
         sage: f.numerator().roots()
         [(0, 2), (4.732050807568877?, 2)]
@@ -99,26 +107,28 @@ def Belyi_AGS(SW,SB,SI,info=False):
         [(1, 3), (6.464101615137755?, 1)]
 
 
-    Mit "info=True" hat der erste Aufruf die Gestalt, alles andere bleibt gleich::
- 
-        sage: [a,f]=Belyi_AGS([2,2],[3,1],[3,1],info=True)                                 
-
-        Die Normalisierung:
-
-
-        Ein weißer Punkt mit dem seltensten Verzweigungsindex  2  wird auf 0 geschickt
-
-        Der eindeutige schwarze Punkt mit Verzweigungsindex  3  wird auf 1 geschickt
-
-        Der eindeutig bestimmte Punkt mit Verzweigungsindex  3  wird auf infty geschickt
-
-        Das resultierende Nennerpolynom hat Grad  1 
-
-        Der Ring der Koeffizienten (zur Berechnung) lautet 
+    If "info=True" the first's command output differs, everything else remains the same::
+        
+        sage: [a,f]=Belyi_AGS([2,2],[3,1],[3,1],info=True)
+        
+        The chosen normalization:
+        
+        
+        A white point with the rarest ramificationindex  2  is mapped to 0
+        
+        The unique black point with ramificationindex  3  is mapped to 1
+        
+        The unique point with ramificationindex  3  is mapped to infty 
+        
+        The resulting denominator of the Belyi-function has degree  1 
+        
+        The ring of the coefficients is 
         Multivariate Polynomial Ring in a0, a1, a2, a3 over Rational Field 
-
-        Der Ring in dem das Gleichungssystem aufgestellt wird lautet
-        Univariate Polynomial Ring in x over Multivariate Polynomial Ring in a0, a1, a2, a3 over Rational Field 
+        
+        The ring, where the calculations are actually done is 
+        Univariate Polynomial Ring in x over Multivariate Polynomial Ring in a0, a1, a2, a3 over Rational Field
+        
+ 
    """
 
     #Sortierung aller Listen um sie an eindToFront zu übergeben
@@ -128,23 +138,29 @@ def Belyi_AGS(SW,SB,SI,info=False):
     SW=eindToFront(SW)
     SI=eindToFront(SI)
     SB=eindToFront(SB)
+    n=sum(SW)
+    if( sum(SB)!=n or sum(SI) != n or sum(SB)!=sum(SI)):
+        sys.exit(['Due to the fact, that the lists are no partition of ',n,' there cannot be a Belyi-morphism of this type. Please check your lists.']);
+    #Riemann-Hurwitz
+    if(-2!=(n-len(SW)-len(SB)-len(SI))):
+        sys.exit('The lists contradict the formula of Riemann-Hurwitz.')
 
 
     if info==True:
-        print '\nDie Normalisierung:\n\n'
+        print '\nThe chosen normalization:\n\n'
         if len([o for o in SW if o==SW[0]])==1:
-            print 'Der eindeutige weiße Punkt mit Verzweigungsindex ',SW[0], ' wird auf 0 geschickt\n'
+            print 'The unique white point with ramificationindex ',SW[0], ' is mapped to 0\n'
         else:
-            print 'Ein weißer Punkt mit dem seltensten Verzweigungsindex ',SW[0],' wird auf 0 geschickt\n'
+            print 'A white point with the rarest ramificationindex ',SW[0],' is mapped to 0\n'
         if len([o for o in SB if o==SB[0]])==1:
-            print 'Der eindeutige schwarze Punkt mit Verzweigungsindex ',SB[0], ' wird auf 1 geschickt\n'
+            print 'The unique black point with ramificationindex ',SB[0], ' is mapped to 1\n'
         else:
-            print 'Ein schwarzer Punkt mit dem seltensten Verzweigungsindex ',SB[0],' wird auf 1 geschickt\n'
+            print 'A black point with the rarest ramificationindex ',SB[0],' is mapped to 1\n'
         if len([o for o in SI if o==SI[0]])==1:
-            print 'Der eindeutig bestimmte Punkt mit Verzweigungsindex ',SI[0], ' wird auf infty geschickt\n'
+            print 'The unique point with ramificationindex ',SI[0], ' is mapped to infty \n'
         else:
-            print 'Ein Punkt mit dem seltensten Verzweigungsindex in SI, nämlich ',SI[0], ' wird auf infty geschickt\n'
-        print 'Das resultierende Nennerpolynom hat Grad ', sum(SI)-SI[0],'\n'
+            print 'A point with the rarest ramificationindex in SI, namely ',SI[0], 'is mapped to infty\n'
+        print 'The resulting denominator of the Belyi-function has degree ', sum(SI)-SI[0],'\n'
    
     #Konstruktion der Polynomringe mit der richtigen Anzahl benötigter Variablen
     anzahl=len(SW)+len(SB)+len(SI)
@@ -154,8 +170,8 @@ def Belyi_AGS(SW,SB,SI,info=False):
     R.<x>=T[]
 
     if info==True:
-        print 'Der Ring der Koeffizienten (zur Berechnung) lautet \n',T,'\n'
-        print 'Der Ring in dem das Gleichungssystem aufgestellt wird lautet\n',R,'\n'
+        print 'The ring of the coefficients is \n',T,'\n'
+        print 'The ring, where the calculations are actually done is \n',R,'\n'
 
     #Die gesuchte Funktion f hat die Gestalt f=k*A/C mit einer Konstanten k, die 
     #in der Realisierung von uns T.gen(0)=a0 ist.
@@ -250,7 +266,92 @@ def koeffvergleich(f,g):
                 a.append(f.coeffs()[i]-g.coeffs()[i])
         return a
 
+
 def belyi_groebner(SW,SB,SI,info=False):
+    r"""
+    This function uses Belyi_AGS(), to calculate Belyi-functions out of a given signature of a dessin denfant. 
+
+    AUTHORS:
+
+    - Michael Eskin
+
+    - Matthias Heinlein
+
+    - Christian Steck
+
+    INPUT:
+
+    - ``SW`` a list with given ramificationindices of white points, which will be mapped to 0
+
+    - ``SB`` a list with given ramificationindices of black points, which will be mapped to 1
+
+    - ``SI`` a list with given ramificationindices of points, which will be mapped to infty
+
+    - Optional: Bool "info"(=False by default). If info=True, all additional informations regarding normalization are printed.
+
+    OUTPUT:
+
+    - A set ``M`` consisting out of Belyi-functions.
+
+    NOTES: 
+
+    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here the point x=0 is a white point with the 'most unique', largest ramificationindex, and similar for x=1 and x=infty. If there is no unique value, then the highest value with the lowest crebritude will be mapped to the corresponding point.
+
+
+
+    EXAMPLES:
+
+    This is a calculation of the Belyi-morphisms with signature SW=[2,2],SB=[3,1] and SI=[3,1]::
+
+        sage: M=belyi_groebner([2,2],[3,1],[3,1])
+        [a0 + 3/8*a3 + 19/8, a1 - 1/2*a3 + 3/2, a2 + 1/8*a3 + 9/8, a3^2 + 6*a3 - 3]
+        [a0 + 3/8*a3 + 19/8, a1 + (-1/2)*a3 + 3/2, a2 + 1/8*a3 + 9/8, a3^2 + 6*a3 - 3]
+        [a0 - 0.04903810567665797?, a1 + 4.732050807568877?, a2 + 0.3169872981077807?]
+        [a0 - 0.04903810567665797?, a1 + 4.732050807568877?]
+        [a0 - 0.04903810567665797?]
+        []
+        [a0 + 2.549038105676658?, a1 + 1.267949192431123?, a2 + 1.183012701892220?]
+        [a0 + 2.549038105676658?, a1 + 1.267949192431123?]
+        [a0 + 2.549038105676658?]
+        []
+        sage: M
+        [(0.04903810567665797?*x^4 - 0.4641016151377546?*x^3 + 1.098076211353316?*x^2)/(x - 0.3169872981077807?), (-2.549038105676658?*x^4 + 6.464101615137755?*x^3 - 4.098076211353316?*x^2)/(x - 1.183012701892220?)]
+
+    The same example with info=True::
+
+        sage: M=belyi_groebner([2,2],[3,1],[3,1],info=True)
+
+        The chosen normalization:
+
+
+        A white point with the rarest ramificationindex  2  is mapped to 0
+
+        The unique black point with ramificationindex  3  is mapped to 1
+
+        The unique point with ramificationindex  3  is mapped to infty 
+        
+        The resulting denominator of the Belyi-function has degree  1 
+        
+        The ring of the coefficients is 
+        Multivariate Polynomial Ring in a0, a1, a2, a3 over Rational Field 
+        
+        The ring, where the calculations are actually done is 
+        Univariate Polynomial Ring in x over Multivariate Polynomial Ring in a0, a1, a2, a3 over Rational Field 
+        
+        [a0 + 3/8*a3 + 19/8, a1 - 1/2*a3 + 3/2, a2 + 1/8*a3 + 9/8, a3^2 + 6*a3 - 3]
+        [a0 + 3/8*a3 + 19/8, a1 + (-1/2)*a3 + 3/2, a2 + 1/8*a3 + 9/8, a3^2 + 6*a3 - 3]
+        [a0 - 0.04903810567665797?, a1 + 4.732050807568877?, a2 + 0.3169872981077807?]
+        [a0 - 0.04903810567665797?, a1 + 4.732050807568877?]
+        [a0 - 0.04903810567665797?]
+        []
+        [a0 + 2.549038105676658?, a1 + 1.267949192431123?, a2 + 1.183012701892220?]
+        [a0 + 2.549038105676658?, a1 + 1.267949192431123?]
+        [a0 + 2.549038105676658?]
+        []
+        sage: M
+        [(0.04903810567665797?*x^4 - 0.4641016151377546?*x^3 + 1.098076211353316?*x^2)/(x - 0.3169872981077807?), (-2.549038105676658?*x^4 + 6.464101615137755?*x^3 - 4.098076211353316?*x^2)/(x - 1.183012701892220?)]
+        
+    """
     #Das ist ein einfaches Programm, dass Belyi-Morphismen mit Hilfe des Mini-Projekts löst. 
     #Achtung, das ist NICHT sehr effektiv.
     [a,f]=Belyi_AGS(SW,SB,SI,info)
