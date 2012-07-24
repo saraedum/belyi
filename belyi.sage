@@ -35,7 +35,8 @@ def eindToFront(S):
 
 def Belyi_AGS(SW,SB,SI,info=False):
     r"""
-    This function returns a system of equations, constructed with the signature of a dessin denfant, to calculate Belyi-functions. 
+    This function returns a system of equations, constructed with the signature
+    of a dessin denfant, to calculate Belyi-functions. 
 
     AUTHORS:
 
@@ -47,31 +48,49 @@ def Belyi_AGS(SW,SB,SI,info=False):
 
     INPUT:
 
-    - ``SW`` a list with given ramificationindices of white points, which will be mapped to 0
+    - ``SW`` a list with given ramificationindices of white points, which will
+    be mapped to 0
 
-    - ``SB`` a list with given ramificationindices of black points, which will be mapped to 1
+    - ``SB`` a list with given ramificationindices of black points, which will
+    be mapped to 1
 
-    - ``SI`` a list with given ramificationindices of points, which will be mapped to infty
+    - ``SI`` a list with given ramificationindices of points, which will be
+    mapped to infty
 
-    - Optional: Bool "info"(=False by default). If info=True, all additional informations regarding normalization are        printed.
+    - Optional: Bool "info"(=False by default). If info=True, all additional
+    informations regarding normalization are        printed.
 
     OUTPUT:
 
-    - A tuple ``[a,f]``, where ``a`` is a system of equations for the coefficients of the formal Belyi-function ``f``.
+    - A tuple ``[a,f]``, where ``a`` is a system of equations for the
+    coefficients of the formal Belyi-function ``f``.
 
     NOTES: 
 
-    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here the point x=0 is a white point with the 'most  unique', largest ramificationindex, and similar for x=1 and x=infty. If there is no unique value, then the highest value with the lowest crebritude will be mapped to the corresponding point.
+    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here
+    the point x=0 is a white point with the 'most  unique', largest
+    ramificationindex, and similar for x=1 and x=infty. If there is no unique
+    value, then the highest value with the lowest crebritude will be mapped to
+    the corresponding point.
 
-    - To calculate ``f`` one has to solve the system of equations ``a`` and map these solutions to the coefficients of ``f``. (compare the function belyi-groebner). 
+    - To calculate ``f`` one has to solve the system of equations ``a`` and map
+    these solutions to the coefficients of ``f``. (compare the function
+            belyi-groebner). 
 
     .. WARNING::
 
-        The lists SW,SB and SI should be entered with care. It is often advisable to use the list with the least elements or with the highest value as SI, since the degree of the denominator will be minimal. But in general, an automated change has proven to lead to bigger systems of equations. I.e. is it possible, that interchanging the lists can lead to a reduced need of computational power. The order of the elements in each list, however, does not matter.
+        The lists SW,SB and SI should be entered with care. It is often
+        advisable to use the list with the least elements or with the highest
+        value as SI, since the degree of the denominator will be minimal. But
+        in general, an automated change has proven to lead to bigger systems of
+        equations. I.e. is it possible, that interchanging the lists can lead
+        to a reduced need of computational power. The order of the elements in
+        each list, however, does not matter.
 
     EXAMPLES:
      
-    In this example we construct a Belyi-function with signature SW=[2,2],SB=[3,1],SI=[3,1]::
+    In this example we construct a Belyi-function with signature
+    SW=[2,2],SB=[3,1],SI=[3,1]::
 
         sage: [a,f]=Belyi_AGS([2,2],[3,1],[3,1])
         sage: a
@@ -107,7 +126,8 @@ def Belyi_AGS(SW,SB,SI,info=False):
         [(1, 3), (6.464101615137755?, 1)]
 
 
-    If "info=True" the first's command output differs, everything else remains the same::
+    If "info=True" the first's command output differs, everything else remains
+    the same::
         
         sage: [a,f]=Belyi_AGS([2,2],[3,1],[3,1],info=True)
         
@@ -269,7 +289,8 @@ def koeffvergleich(f,g):
 
 def belyi_groebner(SW,SB,SI,info=False):
     r"""
-    This function uses Belyi_AGS(), to calculate Belyi-functions out of a given signature of a dessin denfant. 
+    This function uses Belyi_AGS(), to calculate Belyi-functions out of a given
+    signature of a dessin denfant. 
 
     AUTHORS:
 
@@ -281,13 +302,17 @@ def belyi_groebner(SW,SB,SI,info=False):
 
     INPUT:
 
-    - ``SW`` a list with given ramificationindices of white points, which will be mapped to 0
+    - ``SW`` a list with given ramificationindices of white points, which will
+    be mapped to 0
 
-    - ``SB`` a list with given ramificationindices of black points, which will be mapped to 1
+    - ``SB`` a list with given ramificationindices of black points, which will
+    be mapped to 1
 
-    - ``SI`` a list with given ramificationindices of points, which will be mapped to infty
+    - ``SI`` a list with given ramificationindices of points, which will be
+    mapped to infty
 
-    - Optional: Bool "info"(=False by default). If info=True, all additional informations regarding normalization are printed.
+    - Optional: Bool "info"(=False by default). If info=True, all additional
+    informations regarding normalization are printed.
 
     OUTPUT:
 
@@ -295,13 +320,16 @@ def belyi_groebner(SW,SB,SI,info=False):
 
     NOTES: 
 
-    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here the point x=0 is a white point with the 'most unique', largest ramificationindex, and similar for x=1 and x=infty. If there is no unique value, then the highest value with the lowest crebritude will be mapped to the corresponding point.
-
-
+    - Our normalization is such, that f(0)=0, f(1)=1 and f(infty)=infty. Here
+    the point x=0 is a white point with the 'most unique', largest
+    ramificationindex, and similar for x=1 and x=infty. If there is no unique
+    value, then the highest value with the lowest crebritude will be mapped to
+    the corresponding point.
 
     EXAMPLES:
 
-    This is a calculation of the Belyi-morphisms with signature SW=[2,2],SB=[3,1] and SI=[3,1]::
+    This is a calculation of the Belyi-morphisms with signature
+    SW=[2,2],SB=[3,1] and SI=[3,1]::
 
         sage: M=belyi_groebner([2,2],[3,1],[3,1])
         [a0 + 3/8*a3 + 19/8, a1 - 1/2*a3 + 3/2, a2 + 1/8*a3 + 9/8, a3^2 + 6*a3 - 3]
